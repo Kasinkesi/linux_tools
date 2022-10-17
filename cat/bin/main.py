@@ -31,10 +31,7 @@ def number(line, n=[]):
 
 
 def number_nonblank(line, n=[]):
-    if n == [] and line != "\n":
-        n.append(1)
-    elif n != [] and line != "\n":
-        n[0] += 1
-    else:
+    if line == "\n":
         return line
-    return "    " + str(n[0]) + " " + line
+    else:
+        return number(line, n)
