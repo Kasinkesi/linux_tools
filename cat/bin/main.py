@@ -27,7 +27,7 @@ def number(line, n=[]):
         n.append(1)
     else:
         n[0] += 1
-    return "    " + str(n[0]) + " " + line
+    return "%+6s" % str(n[0]) + "  " + line
 
 
 def number_nonblank(line, n=[]):
