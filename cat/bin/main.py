@@ -1,37 +1,31 @@
+import argparse
 import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+
+from lib import cat
 
 
-def steam_reader(input_stream, b, n):
-    for line in input_stream:
-        if b:
-            sys.stdout.write(number_nonblank(line))
-        elif n:
-            sys.stdout.write(number(line))
-        else:
-            sys.stdout.write(line)
+def parse_args():
+    parser = argparse.ArgumentParser(description="cat.py - объединяет файлы и направляет их на стандартный вывод.")
+    parser.add_argument("files", nargs="*", default=sys.stdin,
+                        help="""перечисление файлов для чтения(объеинения). Если ФАЙЛ не указан или вместо его имени стоит дефис (-), то производится чтение со стандартного ввода.""")
+    parser.add_argument("-b", "--number-nonblank", dest="number_nonblank", action="store_true",
+                        help="нумерует ВСЕ НЕПУСТЫЕ строки выходного файла, начиная c 1")
+    parser.add_argument("-n", "--number", action="store_true",
+                        help="нумерует ВСЕ строки выходного файла, начиная c 1")
+    args = parser.parse_args()
+    return args
 
 
-def files_reader(files_list, b, n):
-    for file in files_list:
-        try:
-            with open(file, "r", errors='replace') as src:
-                steam_reader(src, b, n)
-        except FileNotFoundError:
-            print(f"cat: {file}: Нет такого файла или каталога")
-        except IsADirectoryError:
-            print(f"cat: {file}: Это каталог")
-
-
-def number(line, n=[]):
-    if n == []:
-        n.append(1)
+def main():
+    args = parse_args()
+    if args.files == sys.stdin:
+        cat.steam_reader(sys.stdin, args.number_nonblank, args.number)
     else:
-        n[0] += 1
-    return "%+6s" % str(n[0]) + "  " + line
+        cat.files_reader(args.files, args.number_nonblank, args.number)
 
 
-def number_nonblank(line, n=[]):
-    if line == "\n":
-        return line
-    else:
-        return number(line, n)
+if __name__ == '__main__':
+    exit(main())
