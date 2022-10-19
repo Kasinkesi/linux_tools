@@ -2,15 +2,15 @@ import sys
 
 
 def steam_reader(input_stream, number_nonblank_flag=0, number_flag=0):
+    start_line_number = 1
     if number_nonblank_flag:
-        transform = number_nonblank
+        transform = number_nonblank(start_line_number)
     elif number_flag:
-        transform = number
+        transform = number(start_line_number)
     else:
-        transform = lambda x, n: x
-    current_line_number = [0]
+        transform = lambda x: x
     for line in input_stream:
-        sys.stdout.write(transform(line, current_line_number))
+        sys.stdout.write(transform(line))
 
 
 def files_reader(files_list, number_nonblank_flag=0, number_flag=0):
@@ -24,16 +24,27 @@ def files_reader(files_list, number_nonblank_flag=0, number_flag=0):
             print(f"cat: {file}: Это каталог")
 
 
-def number(line, current_line_number):
-    current_line_number[0] += 1
-    return "%+6s" % str(current_line_number[0]) + "  " + line
+def number(current_line_number):
+    def formater(line):
+        nonlocal current_line_number
+        formatted_line = "%+6s" % str(current_line_number) + "  " + line
+        current_line_number += 1
+        return formatted_line
+
+    return formater
 
 
-def number_nonblank(line, current_line_number):
-    if line == "\n":
-        return line
-    else:
-        return number(line, current_line_number)
+def number_nonblank(current_line_number):
+    def formater(line):
+        nonlocal current_line_number
+        if line == "\n":
+            return line
+        else:
+            formatted_line = number(current_line_number)(line)
+            current_line_number += 1
+            return formatted_line
+
+    return formater
 
 
 if __name__ == "__main__":
@@ -43,7 +54,7 @@ if __name__ == "__main__":
     files_reader([__file__])
     with open(__file__, "r") as file:
         steam_reader(file, number_nonblank_flag=0, number_flag=1)
-    print(number("hello world", [100500]))
-    print(number("\n", [100500]))
-    print(number_nonblank("hello world", [100500]))
-    print(number_nonblank("\n", [100500]))
+    print(number(100500)("hello world"))
+    print(number(100500)("\n"))
+    print(number_nonblank(100500)("hello world"))
+    print(number_nonblank(100500)("\n"))
