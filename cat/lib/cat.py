@@ -1,60 +1,130 @@
 import sys
+import re
 
 
-def steam_reader(input_stream, number_nonblank_flag=0, number_flag=0):
-    start_line_number = 1
+def transform_swithcer(number_nonblank_flag, number_flag, smile_exterminator_flag=0):
+    """
+    На вход получает значения предусмотренных флагов, в зависимости от них настривает функция преобразования строки
+    """
     if number_nonblank_flag:
-        transform = number_nonblank(start_line_number)
+        transform = number_nonblank()
     elif number_flag:
-        transform = number(start_line_number)
+        transform = number()
     else:
-        transform = lambda x: x
-    for line in input_stream:
-        sys.stdout.write(transform(line))
+        transform = None
+
+    if smile_exterminator_flag and transform != None:
+        transform = smile_exterminator_decorator(transform)
+    elif smile_exterminator_flag and transform == None:
+        transform = smile_exterminator
+    else:
+        pass
+    return transform
 
 
-def files_reader(files_list, number_nonblank_flag=0, number_flag=0):
+def stream_printer(input_stream, transform):
+    """
+    На вход получает входной поток и функцию преобразования строки,
+    если функция преобразования строки определена, то каждая строка преобразуется с помощью неё, затем отправляется на выходной поток,
+    в противном случае строки отправляются на выходной поток как есть
+    """
+    if transform:
+        for line in input_stream:
+            sys.stdout.write(transform(line))
+    else:
+        for line in input_stream:
+            sys.stdout.write(line)
+
+
+def files_reader(files_list, transform):
+    """
+    На вход получает список файлов, если этот файл существует или это не каталог,
+    то открывает эти файлы и передает файловый объект функции чтения потока,
+    в противном случае печатает сообщение об ошибке
+    """
     for file in files_list:
         try:
             with open(file, "r", errors='replace') as src:
-                steam_reader(src, number_nonblank_flag, number_flag)
+                stream_printer(src, transform)
         except FileNotFoundError:
             print(f"cat: {file}: Нет такого файла или каталога")
         except IsADirectoryError:
             print(f"cat: {file}: Это каталог")
 
 
-def number(current_line_number):
-    def formater(line):
+def number():
+    """
+    Устанавливает текущее значение пумерации первой строки на 1
+    Возвращает функцию преобразования строки
+    """
+    current_line_number = 1
+
+    def transform(line):
+        """
+        На вход получает строку, преобразует её к требуемому виду, инкрементирует значение текущей строки
+        и возвращает преобразованную строку
+        """
         nonlocal current_line_number
         formatted_line = "%+6s" % str(current_line_number) + "  " + line
         current_line_number += 1
         return formatted_line
 
-    return formater
+    return transform
 
 
-def number_nonblank(current_line_number):
-    def formater(line):
+def number_nonblank():
+    """
+    Устанавливает текущее значение пумерации первой строки на 1
+    Возвращает функцию преобразования строки
+    """
+    current_line_number = 1
+
+    def transform(line):
+        """
+        На вход получает строку, если строка пустая, то возвращает её как есть,
+        в противном случае преобразует её к требуемому виду, инкрементирует значение текущей строки
+        и возвращает преобразованную строку
+        """
         nonlocal current_line_number
         if line == "\n":
             return line
         else:
-            formatted_line = number(current_line_number)(line)
+            formatted_line = "%+6s" % str(current_line_number) + "  " + line
             current_line_number += 1
             return formatted_line
 
-    return formater
+    return transform
+
+
+def smile_exterminator_decorator(func):
+    def wrapper(line):
+        line = func(line)
+        sad_line = re.sub("8\)", "no smile for the wicked", line)
+        return sad_line
+
+    return wrapper
+
+
+def smile_exterminator(line):
+    sad_line = re.sub("8\)", "no smile for the wicked", line)
+    return sad_line
 
 
 if __name__ == "__main__":
-    files_reader([__file__], number_nonblank_flag=1, number_flag=1)
-    files_reader([__file__], number_nonblank_flag=1, number_flag=0)
-    files_reader([__file__], number_nonblank_flag=0, number_flag=1)
-    files_reader([__file__])
+    transform = transform_swithcer(number_nonblank_flag=0, number_flag=0)
+    files_reader([__file__], transform)
+    transform = transform_swithcer(number_nonblank_flag=0, number_flag=1)
+    files_reader([__file__], transform)
+    transform = transform_swithcer(number_nonblank_flag=1, number_flag=0)
+    files_reader([__file__], transform)
+    transform = transform_swithcer(number_nonblank_flag=1, number_flag=1)
+    files_reader([__file__], transform)
+    transform = transform_swithcer(number_nonblank_flag=1, number_flag=1, smile_exterminator_flag=1)
     with open(__file__, "r") as file:
-        steam_reader(file, number_nonblank_flag=0, number_flag=1)
-    print(number(100500)("hello world"))
-    print(number(100500)("\n"))
-    print(number_nonblank(100500)("hello world"))
-    print(number_nonblank(100500)("\n"))
+        stream_printer(file, transform)
+    print(number()("hello world"))
+    print(number()("\n"))
+    print(number_nonblank()("hello world"))
+    print(number_nonblank()("\n"))
+
+# 8)
