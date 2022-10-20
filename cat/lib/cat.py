@@ -1,6 +1,8 @@
 import sys
 import re
 
+transform = None
+
 
 def transform_swithcer(number_nonblank_flag, number_flag, smile_exterminator_flag=0):
     """
@@ -36,6 +38,7 @@ def stream_printer(input_stream, transform):
         for line in input_stream:
             sys.stdout.write(line)
     transform_reset()
+
 
 def transform_reset():
     """
