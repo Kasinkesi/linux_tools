@@ -30,25 +30,24 @@ def transform_switcher(number_nonblank_flag, number_flag, smile_exterminator_fla
 def stream_printer(input_stream, transform):
     """
     На вход получает входной поток и функцию преобразования строки,
-    если функция преобразования строки определена и не была ранее использована,
+    если функция преобразования строки определена,
+    то проверяется что она не была раньше использована,
     то каждая строка преобразуется с помощью неё, затем отправляется на выходной поток,
-    в противном случае строки отправляются на выходной поток как есть,
-    после чего помечает функцию преоразования строки использованной
+    после чего помечает функцию преоразования строки использованной,
+    если функция была раньше использовала, то печатается соответствующее сообщение,
+    если функция не определена строки отправляются на выходной поток как есть
     """
+    # здесь бы хорошо выставлять номер первой строки в единицу
     if transform:
         if transform.used == False:
             for line in input_stream:
                 sys.stdout.write(transform(line))
+            transform.used = True
         else:
             print("не определена функция преобразования строки, воспользуйтесь функцией transform_switcher")
     else:
         for line in input_stream:
             sys.stdout.write(line)
-
-    if transform != None:
-        transform.used = True
-    else:
-        pass
 
 
 def files_reader(files_list, transform):
