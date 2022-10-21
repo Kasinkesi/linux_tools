@@ -2,7 +2,7 @@ import sys
 import re
 
 
-def transform_switcher(number_nonblank_flag, number_flag, smile_exterminator_flag=0):
+def transform_config(number_nonblank_flag, number_flag, smile_exterminator_flag=0):
     """
     На вход получает значения предусмотренных флагов, в зависимости от них настривает функцию преобразования строки
     """
@@ -44,7 +44,7 @@ def stream_printer(input_stream, transform):
                 sys.stdout.write(transform(line))
             transform.used = True
         else:
-            print("не определена функция преобразования строки, воспользуйтесь функцией transform_switcher")
+            print("не определена функция преобразования строки, воспользуйтесь функцией transform_config")
     else:
         for line in input_stream:
             sys.stdout.write(line)
@@ -125,15 +125,17 @@ def smile_exterminator(line):
 
 
 if __name__ == "__main__":
-    transform = transform_switcher(number_nonblank_flag=0, number_flag=0)
+    transform = transform_config(number_nonblank_flag=0, number_flag=0)
     files_reader([__file__], transform)
-    transform = transform_switcher(number_nonblank_flag=0, number_flag=1)
+    transform = transform_config(number_nonblank_flag=0, number_flag=1)
     files_reader([__file__], transform)
-    transform = transform_switcher(number_nonblank_flag=1, number_flag=0)
+    transform = transform_config(number_nonblank_flag=1, number_flag=0)
     files_reader([__file__], transform)
-    transform = transform_switcher(number_nonblank_flag=1, number_flag=1)
+    transform = transform_config(number_nonblank_flag=1, number_flag=1)
     files_reader([__file__], transform)
-    transform = transform_switcher(number_nonblank_flag=1, number_flag=1, smile_exterminator_flag=1)
+    transform = transform_config(number_nonblank_flag=1, number_flag=1, smile_exterminator_flag=1)
+    with open(__file__, "r") as file:
+        stream_printer(file, transform)
     with open(__file__, "r") as file:
         stream_printer(file, transform)
     print(number()("hello world"))

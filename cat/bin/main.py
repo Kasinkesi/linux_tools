@@ -23,7 +23,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    transform = cat.transform_swithcer(args.number_nonblank, args.number, args.smile_exterminator)
+    transform = cat.transform_config(args.number_nonblank, args.number, args.smile_exterminator)
     if args.files == sys.stdin:
         cat.stream_printer(sys.stdin, transform)
     else:
