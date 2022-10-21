@@ -1,12 +1,10 @@
 import sys
 import re
 
-transform = None
 
-
-def transform_swithcer(number_nonblank_flag, number_flag, smile_exterminator_flag=0):
+def transform_switcher(number_nonblank_flag, number_flag, smile_exterminator_flag=0):
     """
-    На вход получает значения предусмотренных флагов, в зависимости от них настривает функция преобразования строки
+    На вход получает значения предусмотренных флагов, в зависимости от них настривает функцию преобразования строки
     """
     if number_nonblank_flag:
         transform = number_nonblank()
@@ -21,31 +19,36 @@ def transform_swithcer(number_nonblank_flag, number_flag, smile_exterminator_fla
         transform = smile_exterminator
     else:
         pass
+
+    if transform != None:
+        transform.used = False
+    else:
+        pass
     return transform
 
 
 def stream_printer(input_stream, transform):
     """
     На вход получает входной поток и функцию преобразования строки,
-    если функция преобразования строки определена, то каждая строка преобразуется с помощью неё, затем отправляется на выходной поток,
+    если функция преобразования строки определена и не была ранее использована,
+    то каждая строка преобразуется с помощью неё, затем отправляется на выходной поток,
     в противном случае строки отправляются на выходной поток как есть,
-    после чего устанавливает функцию преобразования строки в None
+    после чего помечает функцию преоразования строки использованной
     """
     if transform:
-        for line in input_stream:
-            sys.stdout.write(transform(line))
+        if transform.used == False:
+            for line in input_stream:
+                sys.stdout.write(transform(line))
+        else:
+            print("не определена функция преобразования строки, воспользуйтесь функцией transform_switcher")
     else:
         for line in input_stream:
             sys.stdout.write(line)
-    transform_reset()
 
-
-def transform_reset():
-    """
-    устанавливает значение transform в None
-    """
-    global transform
-    transform = None
+    if transform != None:
+        transform.used = True
+    else:
+        pass
 
 
 def files_reader(files_list, transform):
@@ -123,15 +126,15 @@ def smile_exterminator(line):
 
 
 if __name__ == "__main__":
-    transform = transform_swithcer(number_nonblank_flag=0, number_flag=0)
+    transform = transform_switcher(number_nonblank_flag=0, number_flag=0)
     files_reader([__file__], transform)
-    transform = transform_swithcer(number_nonblank_flag=0, number_flag=1)
+    transform = transform_switcher(number_nonblank_flag=0, number_flag=1)
     files_reader([__file__], transform)
-    transform = transform_swithcer(number_nonblank_flag=1, number_flag=0)
+    transform = transform_switcher(number_nonblank_flag=1, number_flag=0)
     files_reader([__file__], transform)
-    transform = transform_swithcer(number_nonblank_flag=1, number_flag=1)
+    transform = transform_switcher(number_nonblank_flag=1, number_flag=1)
     files_reader([__file__], transform)
-    transform = transform_swithcer(number_nonblank_flag=1, number_flag=1, smile_exterminator_flag=1)
+    transform = transform_switcher(number_nonblank_flag=1, number_flag=1, smile_exterminator_flag=1)
     with open(__file__, "r") as file:
         stream_printer(file, transform)
     print(number()("hello world"))
