@@ -17,13 +17,11 @@ def transform_config(number_nonblank_flag, number_flag, smile_exterminator_flag=
         transform = smile_exterminator_decorator(transform)
     elif smile_exterminator_flag and transform == None:
         transform = smile_exterminator
-    else:
-        pass
+
 
     if transform != None:
         transform.used = False
-    else:
-        pass
+
     return transform
 
 
