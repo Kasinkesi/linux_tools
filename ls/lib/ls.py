@@ -27,7 +27,7 @@ def files_and_indirs(data_list):
     return files_list, indir_dict
 
 
-def data_print(data_list):
+def data_print(data_list, recursion_flag=False):
     """
     ПРИНИМАЕТ список состоящий из файлов и директорий,
     вызывает функцию files_and_indirs,
@@ -39,14 +39,17 @@ def data_print(data_list):
         print(file, end='  ')
 
     for dir_name in indir_dict:
-        print(f"\n\n{dir_name}:")
-        for data in indir_dict[dir_name]:
-            print(data, end='  ')
-
-
-
-
-
+        if recursion_flag:
+            for cur_dir, dirs_list_recursive, files_list_recursion in os.walk(dir_name):
+                print(f"\n\n{cur_dir}:")
+                for dir_recursive in dirs_list_recursive:
+                    print(dir_recursive, end='  ')
+                for file_recursion in files_list_recursion:
+                    print(file_recursion, end='  ')
+        else:
+            print(f"\n\n{dir_name}:")
+            for data in indir_dict[dir_name]:
+                print(data, end='  ')
 
 
 if __name__ == "__main__":
@@ -58,8 +61,7 @@ if __name__ == "__main__":
     # print(files_and_indirs(data_only_files))
     # print(files_and_indirs(data_only_dirs))
 
-    # data_print(data_full)
+    data_print(data_full, 1)
     # data_print(data_full)
     # data_print(data_only_files)
     # data_print(data_only_dirs)
-
