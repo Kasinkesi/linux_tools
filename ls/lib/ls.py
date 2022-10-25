@@ -27,20 +27,17 @@ def files_and_indirs(data_list):
     return files_list, indir_dict
 
 
-def files_print(data_list):
+def data_print(data_list):
     """
     ПРИНИМАЕТ список состоящий из файлов и директорий,
     вызывает функцию files_and_indirs,
     печатает все файлы из входного списка,
     печатает название директорий и их содержимое
     """
-    files_list = files_and_indirs(data_list)[0]
+    files_list, indir_dict = files_and_indirs(data_list)
     for file in files_list:
         print(file, end='  ')
 
-
-def dirs_print(data_list):
-    indir_dict = files_and_indirs(data_list)[1]
     for dir_name in indir_dict:
         print(f"\n\n{dir_name}:")
         for data in indir_dict[dir_name]:
@@ -61,8 +58,8 @@ if __name__ == "__main__":
     # print(files_and_indirs(data_only_files))
     # print(files_and_indirs(data_only_dirs))
 
-    # files_print(data_full)
-    # dirs_print(data_full)
+    # data_print(data_full)
+    # data_print(data_full)
     # data_print(data_only_files)
     # data_print(data_only_dirs)
 
