@@ -1,6 +1,9 @@
-import sys
 import os
+import stat
 import os.path
+import pwd
+import grp
+import time
 
 
 def files_and_indirs(data_list):
@@ -18,7 +21,7 @@ def files_and_indirs(data_list):
         elif os.path.isfile(data):
             files_list.append(data)
         else:
-            print(f'\n{data} не файл или директория')
+            print(f'{data} не файл или директория')
 
     indir_dict = {}
     for dir_name in dirs_list:
@@ -27,7 +30,7 @@ def files_and_indirs(data_list):
     return files_list, indir_dict
 
 
-def files_print(files_list):
+def files_print(files_list,):
     """
     ПРИНИМАЕТ список файлов ,
     печатает названия файлов с двумя пробелами без символа новой строки
@@ -66,9 +69,21 @@ def dirs_print_recursion(indir_dict):
     print()
 
 
+def long_verbose(pathname):
+    """
+    ПРИНИМАЕТ путь к файлу или директории
+    ВОЗВРАЩАЕТ подготовленную для печати строку
+    """
+    stat_info = os.stat(pathname)
+    return (f"{stat.filemode(stat_info.st_mode)} {stat_info.st_nlink} {pwd.getpwuid(stat_info.st_uid).pw_name} "
+          f"{grp.getgrgid(stat_info.st_uid).gr_name} {stat_info.st_size} "
+          f"{time.strftime('%b %d %H:%M',time.localtime(stat_info.st_mtime))} {pathname}")
+
+
+
 if __name__ == "__main__":
     data_full = ['.', '..', 'ls.py', 'test']
-    data_only_files = ['ls.py']
+    data_only_files = ['ls.py', 'test']
     data_only_dirs = ['.', '..', 'test']
 
     # print(files_and_indirs(data_full))
@@ -78,11 +93,13 @@ if __name__ == "__main__":
 
     files_list, indir_dict = files_and_indirs(data_full)
     files_print(files_list)
-    dirs_print(indir_dict)
-    dirs_print_recursion(indir_dict)
-    # data_print(data_full)
-    # data_print(data_only_files)
-    # data_print(data_only_dirs)
+    # dirs_print(indir_dict)
+    # dirs_print_recursion(indir_dict)
 
-    print(os.stat(__file__))
-    print(os.stat('.'))
+
+
+    print(long_verbose('.'))
+    print()
+
+
+
