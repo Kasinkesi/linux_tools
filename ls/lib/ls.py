@@ -18,7 +18,7 @@ def files_and_indirs(data_list):
         elif os.path.isfile(data):
             files_list.append(data)
         else:
-            print(f'{data} не файл или директория')
+            print(f'\n{data} не файл или директория')
 
     indir_dict = {}
     for dir_name in dirs_list:
@@ -27,29 +27,43 @@ def files_and_indirs(data_list):
     return files_list, indir_dict
 
 
-def data_print(data_list, recursion_flag=False):
+def files_print(files_list):
     """
-    ПРИНИМАЕТ список состоящий из файлов и директорий,
-    вызывает функцию files_and_indirs,
-    печатает все файлы из входного списка,
-    печатает название директорий и их содержимое
+    ПРИНИМАЕТ список файлов ,
+    печатает названия файлов с двумя пробелами без символа новой строки
     """
-    files_list, indir_dict = files_and_indirs(data_list)
     for file in files_list:
         print(file, end='  ')
+    print()
 
+def dirs_print(indir_dict):
+    """
+    ПРИНИМАЕТ словарь где ключ это название директории, а значение - названия содержимого этой директории,
+    печатает название директорий и их содержимое, с добавлением двух символов новой строки перед наазванием диретории
+    """
     for dir_name in indir_dict:
-        if recursion_flag:
-            for cur_dir, dirs_list_recursive, files_list_recursion in os.walk(dir_name):
-                print(f"\n\n{cur_dir}:")
-                for dir_recursive in dirs_list_recursive:
-                    print(dir_recursive, end='  ')
-                for file_recursion in files_list_recursion:
-                    print(file_recursion, end='  ')
-        else:
-            print(f"\n\n{dir_name}:")
-            for data in indir_dict[dir_name]:
-                print(data, end='  ')
+        print(f"\n{dir_name}:")
+        for data in indir_dict[dir_name]:
+            print(data, end='  ')
+        print()
+    print()
+
+
+def dirs_print_recursion(indir_dict):
+    """
+    ПРИНИМАЕТ словарь где ключ это название директории, а значение - названия содержимого этой директории,
+    рекурсивно углубляется во все директории которые встречаются,
+    печатает название директорий и их содержимое, с добавлением двух символов новой строки перед названием диретории
+    """
+    for dir_name in indir_dict:
+        for cur_dir, dirs_list_recursive, files_list_recursion in os.walk(dir_name):
+            print(f"\n{cur_dir}:")
+            for dir_recursive in dirs_list_recursive:
+                print(dir_recursive, end='  ')
+            for file_recursion in files_list_recursion:
+                print(file_recursion, end='  ')
+            print()
+    print()
 
 
 if __name__ == "__main__":
@@ -61,7 +75,14 @@ if __name__ == "__main__":
     # print(files_and_indirs(data_only_files))
     # print(files_and_indirs(data_only_dirs))
 
-    data_print(data_full, 1)
+
+    files_list, indir_dict = files_and_indirs(data_full)
+    files_print(files_list)
+    dirs_print(indir_dict)
+    dirs_print_recursion(indir_dict)
     # data_print(data_full)
     # data_print(data_only_files)
     # data_print(data_only_dirs)
+
+    print(os.stat(__file__))
+    print(os.stat('.'))
