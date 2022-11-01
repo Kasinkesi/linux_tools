@@ -53,7 +53,9 @@ def dirs_print(indir_dict, sort_format=None, verbose_format=None):
     печатает название директорий и их содержимое
     """
     if sort_format != None:
-        indir_dict = sort_format(indir_dict)            #превращается в список ключей
+        indir_list = sort_format(indir_dict)
+    else:
+        indir_list = list(indir_dict)
     if verbose_format != None:
         for dir_name in indir_dict:
             print(f"\n{dir_name}:")
@@ -61,7 +63,7 @@ def dirs_print(indir_dict, sort_format=None, verbose_format=None):
                 print(verbose_format(data), end='  ')
             print()
     else:
-        for dir_name in indir_dict:
+        for dir_name in indir_list:
             print(f"\n{dir_name}:")
             # print(*indir_dict[dir_name])
             for data in indir_dict[dir_name]:
