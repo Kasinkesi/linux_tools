@@ -6,7 +6,7 @@ import grp
 import time
 
 
-def files_and_indirs(data_list):
+def files_and_indirs(data_list, sort_format=None):
     """
     ПРИНИМАЕТ список состоящий из файлов и директорий,
     разделяет файлы от директорий,
@@ -24,10 +24,14 @@ def files_and_indirs(data_list):
             print(f'{data} не файл или директория')
 
     indir_dict = {}
-    for dir_name in dirs_list:
-        indir_dict[dir_name] = os.listdir(dir_name)
-
-    return files_list, indir_dict
+    if sort_format != None:
+        for dir_name in sort_format(dirs_list):
+            indir_dict[dir_name] = os.listdir(dir_name)
+        return sort_format(files_list), indir_dict
+    else:
+        for dir_name in dirs_list:
+            indir_dict[dir_name] = os.listdir(dir_name)
+        return files_list, indir_dict
 
 
 def files_print(files_list, sort_format=None, verbose_format=None):
@@ -44,7 +48,7 @@ def files_print(files_list, sort_format=None, verbose_format=None):
         # print(*files_list)
         for file in files_list:
             print(file, end='  ')
-    print()
+    # print()
 
 
 def dirs_print(indir_dict, sort_format=None, verbose_format=None):
@@ -58,18 +62,20 @@ def dirs_print(indir_dict, sort_format=None, verbose_format=None):
         indir_list = list(indir_dict)
     if verbose_format != None:
         for dir_name in indir_dict:
-            print(f"\n{dir_name}:")
+            if len(indir_dict) > 1 and dir_name != '.':
+                print(f"\n{dir_name}:")
             for data in indir_dict[dir_name]:
-                print(verbose_format(data), end='  ')
-            print()
+                print(verbose_format(os.path.join(dir_name, data)), end='  ')
+                print()
     else:
         for dir_name in indir_list:
-            print(f"\n{dir_name}:")
+            if len(indir_dict) > 1 and dir_name != '.':
+                print(f"\n{dir_name}:")
             # print(*indir_dict[dir_name])
             for data in indir_dict[dir_name]:
                 print(data, end='  ')
             print()
-    print()
+    # print()
 
 
 def dirs_print_recursive(indir_dict, sort_format=None, verbose_format=None):
@@ -82,10 +88,9 @@ def dirs_print_recursive(indir_dict, sort_format=None, verbose_format=None):
         for cur_dir, dirs_list_recursive, files_list_recursive in os.walk(dir_name):
             indir_list = []
             for dir_recursive in dirs_list_recursive:
-                indir_list.append(os.path.join(cur_dir,dir_recursive))
+                indir_list.append(os.path.join(cur_dir, dir_recursive))
             for file_recursive in files_list_recursive:
-                indir_list.append(os.path.join(cur_dir,file_recursive))
-
+                indir_list.append(os.path.join(cur_dir, file_recursive))
 
             if sort_format != None:
                 indir_list = sort_format(indir_list)
@@ -98,8 +103,8 @@ def dirs_print_recursive(indir_dict, sort_format=None, verbose_format=None):
                 print(f"\n{cur_dir}:")
                 # print(*indir_list)
                 for indir in indir_list:
-                    print(indir, end='  ')
-                    print()
+                    print(os.path.split(indir)[1], end='  ')
+                print()
     print()
 
 
@@ -114,32 +119,27 @@ def long_verbose(pathname):
             f"{time.strftime('%b %d %H:%M', time.localtime(stat_info.st_mtime))} {os.path.split(pathname)[1]}")
 
 
-
 def sort_revers(any_array):
     return reversed(sorted(any_array))
 
 
 if __name__ == "__main__":
-    data_full = ['.', '..', 'ls.py', 'test']
-    data_only_files = ['ls.py', 'test']
-    data_only_dirs = ['.', '..', 'test']
+    data_only_curent = ['..']
+    data_full = ['.', '..', 'ls.py', 'fail_file']
+    data_only_files = ['ls.py', 'fail_file']
+    data_only_dirs = ['.', '..', 'fail_file']
 
     # print(files_and_indirs(data_full))
     # print(files_and_indirs(data_only_files))
     # print(files_and_indirs(data_only_dirs))
 
-    files_list, indir_dict = files_and_indirs(data_full)
+    files_list, indir_dict = files_and_indirs(data_only_curent)
+
     # files_print(files_list,sort_format=sort_revers, verbose_format=long_verbose)
-    # dirs_print(indir_dict)
-    dirs_print_recursive(indir_dict,sort_format=sorted, verbose_format=long_verbose)
+    # dirs_print(indir_dict,sort_format=sorted, verbose_format=None)
+    dirs_print_recursive(indir_dict, sort_format=sorted, verbose_format=None)
 
     # print(long_verbose('.'))
     print()
 
-
 string_list = ["hi hi", "hello  ", "  hio"]
-
-
-
-
-
