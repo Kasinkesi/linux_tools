@@ -110,7 +110,7 @@ def long_verbose(pathname):
     """
     stat_info = os.stat(pathname)
     return (f"{stat.filemode(stat_info.st_mode)} {stat_info.st_nlink} {pwd.getpwuid(stat_info.st_uid).pw_name} "
-            f"{grp.getgrgid(stat_info.st_uid).gr_name} {stat_info.st_size} "
+            f"{grp.getgrgid(stat_info.st_uid).gr_name} {stat_info.st_size:>4} "
             f"{time.strftime('%b %d %H:%M', time.localtime(stat_info.st_mtime))} {os.path.split(pathname)[1]}")
 
 
