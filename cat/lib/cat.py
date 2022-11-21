@@ -42,7 +42,8 @@ def stream_printer(input_stream, transform):
                 sys.stdout.write(transform(line))
             transform.used = True
         else:
-            print("не определена функция преобразования строки, воспользуйтесь функцией transform_config")
+            print("функция преобразования строки не может быть использована повторно, "
+                  "воспользуйтесь функцией transform_config")
     else:
         for line in input_stream:
             sys.stdout.write(line)
