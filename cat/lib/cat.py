@@ -1,8 +1,8 @@
 import sys
 import re
+#enumerate + filter
 
-
-def transform_config(number_nonblank_flag, number_flag, smile_exterminator_flag=0):
+def transform_config(number_nonblank_flag=0, number_flag=0, smile_exterminator_flag=0):
     """
     На вход получает значения предусмотренных флагов, в зависимости от них настривает функцию преобразования строки
     """

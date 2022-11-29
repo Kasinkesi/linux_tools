@@ -8,6 +8,6 @@ except:
     from lib import cat
 
 def test_no_flags():
-    t_transform = cat.transform_config()
+    current_transform = cat.transform_config()
     expected = None
-    assert t_transform == expected
+    assert current_transform == expected
