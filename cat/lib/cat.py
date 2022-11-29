@@ -25,7 +25,7 @@ def transform_config(number_nonblank_flag=0, number_flag=0, smile_exterminator_f
     return transform
 
 
-def stream_printer(input_stream, transform):
+def stream_printer(input_stream, transform=None):
     """
     На вход получает входной поток и функцию преобразования строки,
     если функция преобразования строки определена,
