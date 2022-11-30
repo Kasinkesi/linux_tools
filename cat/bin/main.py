@@ -23,8 +23,7 @@ def parse_args():
     return args
 
 
-def main():
-    args = parse_args()
+def main(args):
     transform = cat.transform_config(args.number_nonblank, args.number, args.smile_exterminator)
     if args.files == sys.stdin:
         cat.stream_printer(sys.stdin, transform)
@@ -33,4 +32,5 @@ def main():
 
 
 if __name__ == '__main__':
-    exit(main())
+    args = parse_args()
+    exit(main(args))
