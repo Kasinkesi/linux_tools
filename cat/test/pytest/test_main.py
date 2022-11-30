@@ -1,3 +1,6 @@
+import sys
+import os
+
 try:
     import cat.bin.main as main
 except:

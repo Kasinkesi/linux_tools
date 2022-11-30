@@ -1,4 +1,6 @@
 import pytest
+import sys
+import os
 from collections import namedtuple
 import io
 
@@ -9,13 +11,13 @@ except:
     from lib import cat
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def empty_stream():
     t_stream = io.StringIO("")
     return t_stream
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def nonempty_stream():
     t_stream = io.StringIO("hi\n\nhello8)\n")
     return t_stream
