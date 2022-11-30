@@ -2,7 +2,7 @@ import sys
 import os
 
 try:
-    import cat.lib.cat as cat
+    from cat.lib import cat
 except:
     sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
     from lib import cat
