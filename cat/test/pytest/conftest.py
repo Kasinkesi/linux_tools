@@ -9,16 +9,21 @@ except:
     from lib import cat
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def empty_stream():
-    t_string = io.StringIO("")
-    return t_string
+    t_stream = io.StringIO("")
+    return t_stream
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def nonempty_stream():
-    t_string = io.StringIO("hi\n\nhello8)\n")
-    return t_string
+    t_stream = io.StringIO("hi\n\nhello8)\n")
+    return t_stream
+
+
+@pytest.fixture(scope="module")
+def three_strings():
+    return ("hi", "\n", "hello8)")
 
 
 @pytest.fixture()
