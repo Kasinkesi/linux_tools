@@ -9,36 +9,36 @@ except:
     from lib import cat
 
 
-def test_empty_string_and_no_transform(capsys, empty_string):
-    cat.stream_printer(empty_string)
+def test_empty_string_and_no_transform(capsys, empty_stream):
+    cat.stream_printer(empty_stream)
     captured = capsys.readouterr()
     expected = ""
     assert captured.out == expected
 
 
-def test_nonempty_string_and_no_transform(capsys, nonempty_string):
-    cat.stream_printer(nonempty_string)
+def test_nonempty_string_and_no_transform(capsys, nonempty_stream):
+    cat.stream_printer(nonempty_stream)
     captured = capsys.readouterr()
     expected = "hi\n\nhello8)\n"
     assert captured.out == expected
 
 
-def test_nonempty_string_and_transform(capsys, nonempty_string, transform_b_n_s_unused):
-    cat.stream_printer(nonempty_string, transform_b_n_s_unused)
+def test_nonempty_string_and_transform(capsys, nonempty_stream, transform_b_n_s_unused):
+    cat.stream_printer(nonempty_stream, transform_b_n_s_unused)
     captured = capsys.readouterr()
     expected = '     1  hi\n\n     2  hellono smile for the wicked\n'
     assert captured.out == expected
 
 
-def test_empty_string_and_unused_transform(capsys, empty_string, transform_b_n_s_unused):
-    cat.stream_printer(empty_string, transform_b_n_s_unused)
+def test_empty_string_and_unused_transform(capsys, empty_stream, transform_b_n_s_unused):
+    cat.stream_printer(empty_stream, transform_b_n_s_unused)
     captured = capsys.readouterr()
     expected = ""
     assert captured.out == expected
 
 
-def test_empty_string_and_used_transform(capsys, empty_string, transform_b_n_s_used):
-    cat.stream_printer(empty_string, transform_b_n_s_used)
+def test_empty_string_and_used_transform(capsys, empty_stream, transform_b_n_s_used):
+    cat.stream_printer(empty_stream, transform_b_n_s_used)
     captured = capsys.readouterr()
     expected = 'функция преобразования строки не может быть использована повторно, ' \
                'воспользуйтесь функцией transform_config\n'

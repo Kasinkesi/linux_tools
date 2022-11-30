@@ -10,13 +10,13 @@ except:
 
 
 @pytest.fixture()
-def empty_string():
+def empty_stream():
     t_string = io.StringIO("")
     return t_string
 
 
 @pytest.fixture()
-def nonempty_string():
+def nonempty_stream():
     t_string = io.StringIO("hi\n\nhello8)\n")
     return t_string
 
