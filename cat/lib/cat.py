@@ -32,8 +32,8 @@ def stream_printer(input_stream, transform=None):
     то проверяется что она не была раньше использована,
     то каждая строка преобразуется с помощью неё, затем отправляется на выходной поток,
     после чего помечает функцию преоразования строки использованной,
-    если функция была раньше использовала, то печатается соответствующее сообщение,
-    если функция не определена строки отправляются на выходной поток как есть
+    если функция была раньше использована, то печатается соответствующее сообщение,
+    если функция не определена, строки отправляются на выходной поток как есть
     """
     # здесь бы хорошо выставлять номер первой строки в единицу
     if transform:
@@ -49,20 +49,23 @@ def stream_printer(input_stream, transform=None):
             sys.stdout.write(line)
 
 
-def files_reader(files_list, transform):
+def files_reader(files_list, transform=None):
     """
     На вход получает список файлов, если этот файл существует или это не каталог,
     то открывает эти файлы и передает файловый объект функции печати потока,
     в противном случае печатает сообщение об ошибке
     """
-    for file in files_list:
-        try:
-            with open(file, "r", errors='replace') as src:
-                stream_printer(src, transform)
-        except FileNotFoundError:
-            print(f"cat: {file}: Нет такого файла или каталога")
-        except IsADirectoryError:
-            print(f"cat: {file}: Это каталог")
+    if not isinstance(files_list, list):
+        print("list of files expected")
+    else:
+        for file in files_list:
+            try:
+                with open(file, "r", errors='replace') as src:
+                    stream_printer(src, transform)
+            except FileNotFoundError:
+                print(f"cat: {file}: Нет такого файла или каталога")
+            except IsADirectoryError:
+                print(f"cat: {file}: Это каталог")
 
 
 def number():
