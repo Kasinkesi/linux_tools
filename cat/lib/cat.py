@@ -1,6 +1,8 @@
 import sys
 import re
-#enumerate + filter
+
+
+# enumerate + filter
 
 def transform_config(number_nonblank_flag=0, number_flag=0, smile_exterminator_flag=0):
     """
@@ -17,7 +19,6 @@ def transform_config(number_nonblank_flag=0, number_flag=0, smile_exterminator_f
         transform = smile_exterminator_decorator(transform)
     elif smile_exterminator_flag and transform == None:
         transform = smile_exterminator
-
 
     if transform != None:
         transform.used = False
@@ -80,10 +81,13 @@ def number():
         На вход получает строку, преобразует её к требуемому виду, инкрементирует значение текущей строки
         и возвращает преобразованную строку
         """
-        nonlocal current_line_number
-        formatted_line = "%+6s" % str(current_line_number) + "  " + line
-        current_line_number += 1
-        return formatted_line
+        if not line:
+            return line
+        else:
+            nonlocal current_line_number
+            formatted_line = "%+6s  %s" % (str(current_line_number), line)
+            current_line_number += 1
+            return formatted_line
 
     return transform
 
@@ -102,28 +106,27 @@ def number_nonblank():
         и возвращает преобразованную строку
         """
         nonlocal current_line_number
-        if line == "\n":
+        if not line or line == "\n":
             return line
         else:
-            formatted_line = "%+6s" % str(current_line_number) + "  " + line
+            formatted_line = "%+6s  %s" % (str(current_line_number), line)
             current_line_number += 1
             return formatted_line
 
     return transform
 
 
-def smile_exterminator_decorator(func):
-    def wrapper(line):
-        line = func(line)
-        sad_line = re.sub("8\)", "no smile for the wicked", line)
-        return sad_line
-
-    return wrapper
-
-
 def smile_exterminator(line):
     sad_line = re.sub("8\)", "no smile for the wicked", line)
     return sad_line
+
+
+def smile_exterminator_decorator(func):
+    def wrapper(line):
+        line = smile_exterminator(func(line))
+        return line
+
+    return wrapper
 
 
 if __name__ == "__main__":
