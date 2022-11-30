@@ -123,7 +123,7 @@ def smile_exterminator(line):
 
 def smile_exterminator_decorator(func):
     def wrapper(line):
-        line = smile_exterminator(func(line))
+        line = func(smile_exterminator(line))
         return line
 
     return wrapper
