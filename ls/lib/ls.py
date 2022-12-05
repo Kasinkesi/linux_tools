@@ -60,6 +60,7 @@ def dirs_print(indir_dict, sort_format=None, verbose_format=None):
         indir_list = sort_format(indir_dict)
     else:
         indir_list = list(indir_dict)
+
     if verbose_format != None:
         for dir_name in indir_dict:
             if len(indir_dict) > 1 and dir_name != '.':
@@ -120,7 +121,7 @@ def long_verbose(pathname):
 
 
 def sort_revers(any_array):
-    return reversed(sorted(any_array))
+    return sorted(any_array, reverse=True)
 
 
 if __name__ == "__main__":
