@@ -113,10 +113,10 @@ def dirs_print_recursive(indir_dict, sort_format=None, verbose_format=None):
     for dir_name in indir_dict:
         for cur_dir, dirs_list_recursive, files_list_recursive in os.walk(dir_name):
             indir_list = []
-            for dir_recursive in dirs_list_recursive:
-                indir_list.append(os.path.join(cur_dir, dir_recursive))
             for file_recursive in files_list_recursive:
                 indir_list.append(os.path.join(cur_dir, file_recursive))
+            for dir_recursive in dirs_list_recursive:
+                indir_list.append(os.path.join(cur_dir, dir_recursive))
 
             if sort_format != None:
                 indir_list = sort_format(indir_list)
