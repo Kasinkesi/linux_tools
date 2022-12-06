@@ -1,3 +1,4 @@
+import copy
 import os
 import stat
 import os.path
@@ -47,7 +48,7 @@ def files_print(files_list, sort_format=None, verbose_format=None):
     else:
         # print(*files_list)
         for file in files_list:
-            print(file, end='  ')
+            print(file, end='  \n')
     # print()
 
 
@@ -62,21 +63,45 @@ def dirs_print(indir_dict, sort_format=None, verbose_format=None):
         indir_list = list(indir_dict)
 
     if verbose_format != None:
-        for dir_name in indir_dict:
-            if len(indir_dict) > 1 and dir_name != '.':
+        for dir_name in indir_list:
+            if len(indir_list) > 1 and dir_name != '.':
                 print(f"\n{dir_name}:")
             for data in indir_dict[dir_name]:
                 print(verbose_format(os.path.join(dir_name, data)), end='  ')
                 print()
     else:
         for dir_name in indir_list:
-            if len(indir_dict) > 1 and dir_name != '.':
+            if len(indir_list) > 1:  # and dir_name != '.'
                 print(f"\n{dir_name}:")
             # print(*indir_dict[dir_name])
             for data in indir_dict[dir_name]:
                 print(data, end='  ')
             print()
-    # print()
+    print()
+
+
+def selfmade_recursive(data_list, sort_format=None, verbose_format=None):
+    files_list, indir_dict = files_and_indirs(data_list, sort_format)
+    files_print(files_list, sort_format, verbose_format)
+    dirs_print(indir_dict, sort_format, verbose_format)
+    for k, v in indir_dict.items():
+        for v_path in v:
+            dir_path = os.path.join(k, v_path)
+            if os.path.isdir(dir_path):
+                print(f"{dir_path}:")
+                selfmade_recursive([dir_path], sort_format, verbose_format)
+
+
+def recursive_indir_dict(indir_dict):
+    """
+    ПРИНИМАЕТ словарь где ключ это название директории, а значение - названия содержимого этой директории,
+    ВОЗВРАЩАЕТ
+    """
+    indir_dict_rec = {}
+    for dir_name in indir_dict:
+        for cur_dir, dirs_list_recursive, files_list_recursive in os.walk(dir_name):
+            indir_dict_rec[cur_dir] = files_list_recursive + dirs_list_recursive
+    return indir_dict_rec
 
 
 def dirs_print_recursive(indir_dict, sort_format=None, verbose_format=None):
@@ -129,18 +154,27 @@ if __name__ == "__main__":
     data_full = ['.', '..', 'ls.py', 'fail_file']
     data_only_files = ['ls.py', 'fail_file']
     data_only_dirs = ['.', '..', 'fail_file']
+    start_from_here = ['.']
+    my_project = ['/home/doka/projects/linux_tools']
 
     # print(files_and_indirs(data_full))
     # print(files_and_indirs(data_only_files))
     # print(files_and_indirs(data_only_dirs))
 
-    files_list, indir_dict = files_and_indirs(data_only_curent)
+    files_list, indir_dict = files_and_indirs(data_full)
+
+    print("dirs_print(recursive_indir_dict")
+    dirs_print(recursive_indir_dict(data_full))
 
     # files_print(files_list,sort_format=sort_revers, verbose_format=long_verbose)
     # dirs_print(indir_dict,sort_format=sorted, verbose_format=None)
-    dirs_print_recursive(indir_dict, sort_format=sorted, verbose_format=None)
+    print("dirs_print_recursive(indir_dict")
+    dirs_print_recursive(indir_dict)
 
     # print(long_verbose('.'))
-    print()
+    # print()
+
+    print("selfmade_recursive")
+    selfmade_recursive(data_full)
 
 string_list = ["hi hi", "hello  ", "  hio"]
