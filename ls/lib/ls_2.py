@@ -1,3 +1,7 @@
+"""
+oficial ls sort "_" not like python
+"""
+
 import os
 import stat
 import os.path
@@ -10,7 +14,7 @@ import sys
 
 def files_and_dirs(data_list, sort_format):
     """
-    ПРИНИМАЕТ список состоящий из файлов и директорий,
+    ПРИНИМАЕТ список состоящий из файлов и директорий, функцию форматирования,
     ВОЗВРАЩАЕТ кортеж из отсортированных списков файлов и директорий
     """
     files_list = []
@@ -25,12 +29,12 @@ def files_and_dirs(data_list, sort_format):
     return sort_format(files_list), sort_format(dirs_list)
 
 
-def basename_print(paths_list, verbose_format_flag):
+def basename_print(paths_list, long_verbose_flag):
     """
-    ПРИНИМАЕТ список путей,
-    форматирование вывода
+    ПРИНИМАЕТ список путей, флаг расширенного вывода,
+    форматирование вывода в зависимости от long_verbose_flag
     """
-    if verbose_format_flag:
+    if long_verbose_flag:
         for path in paths_list:
             print(long_verbose(path))
     else:
@@ -40,24 +44,29 @@ def basename_print(paths_list, verbose_format_flag):
 
 
 
-def dirs_print(dirs_list, sort_format, verbose_format_flag, recursion_flag):
+def dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag):
     """
-    ПРИНИМАЕТ список директорий,
+    ПРИНИМАЕТ список директорий, флаг расширенного вывода, и флаг рекурсивного обхода,
     для каждой директориий печатает название директории,
+
     """
     for dir_name in dirs_list:
         print(f"\n{dir_name}:")
-        if verbose_format_flag:
+        if long_verbose_flag:
             print(f"Итого {volume_calculate(dir_name)}")
         indir_list = os.listdir(dir_name)
         # собирает список из относительных путей до содержимого директории
         indir_path_list = [os.path.join(dir_name, indir_name) for indir_name in indir_list]
         files_list, dirs_list = files_and_dirs(indir_path_list, sort_format=sort_format)
-        basename_print(files_list + dirs_list, verbose_format_flag)
+        basename_print(files_list + dirs_list, long_verbose_flag)
         if recursion_flag:
-            dirs_print(dirs_list, sort_format, verbose_format_flag, recursion_flag)
+            dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag)
 
 def volume_calculate(dir_path):
+    """
+    ПРИНИМАЕТ путь к директории
+    ВОЗВРАЩАЕТ кратную 4кБ сумму размеров содержимого полученной диретории
+    """
     volume = 0
     for indir_name in os.listdir(dir_path):
         indir_path = os.path.join(dir_path, indir_name)
@@ -95,8 +104,8 @@ if __name__ == "__main__":
 
     files_list, dirs_list = files_and_dirs(data_full, sort_format=sorted)
     # print(files_and_dirs(data_full, sort_format=sorted))
-    basename_print(files_list, verbose_format_flag=1)
-    dirs_print(dirs_list, sort_format=sorted, verbose_format_flag=1, recursion_flag=1)
+    basename_print(files_list, long_verbose_flag=1)
+    dirs_print(dirs_list, sort_format=sorted, long_verbose_flag=1, recursion_flag=1)
 
     # print("dirs_print(recursive_indir_dict)")
     # dirs_print(recursive_indir_dict(data_full))

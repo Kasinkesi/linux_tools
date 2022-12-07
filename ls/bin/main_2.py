@@ -39,8 +39,8 @@ def main():
 
     files_list, dirs_list = ls_2.files_and_dirs(args.paths, sort_format=sort_format)
 
-    ls_2.basename_print(files_list, verbose_format_flag=args.l)
-    ls_2.dirs_print(dirs_list, sort_format=sort_format, verbose_format_flag=args.l, recursion_flag=args.R)
+    ls_2.basename_print(files_list, long_verbose_flag=args.l)
+    ls_2.dirs_print(dirs_list, sort_format=sort_format, long_verbose_flag=args.l, recursion_flag=args.R)
 
 
 
