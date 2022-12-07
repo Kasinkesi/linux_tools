@@ -32,7 +32,7 @@ def main():
     if args.sort_none:
         sort_format = None
     elif args.reverse:
-        sort_format = ls_2.sort_revers
+        sort_format = ls_2.basename_sort_revers
     else:
         sort_format = ls_2.basename_sort
 
