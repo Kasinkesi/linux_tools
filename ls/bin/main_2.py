@@ -34,7 +34,7 @@ def main():
     elif args.reverse:
         sort_format = ls_2.sort_revers
     else:
-        sort_format = sorted
+        sort_format = ls_2.basename_sort
 
 
     files_list, dirs_list = ls_2.files_and_dirs(args.paths, sort_format=sort_format)

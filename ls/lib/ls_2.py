@@ -86,8 +86,11 @@ def long_verbose(pathname):
             f"{time.strftime('%b %d %H:%M', time.localtime(stat_info.st_mtime))} {os.path.split(pathname)[1]}")
 
 
-def sort_revers(any_array):
-    return sorted(any_array, reverse=True)
+def basename_sort(path_list):
+    return sorted(path_list, key=os.path.basename)
+
+def sort_revers(path_list):
+    return sorted(path_list, key=os.path.basename, reverse=True)
 
 
 if __name__ == "__main__":
@@ -102,7 +105,7 @@ if __name__ == "__main__":
     # print(files_and_indirs(data_only_files))
     # print(files_and_indirs(data_only_dirs))
 
-    files_list, dirs_list = files_and_dirs(data_full, sort_format=sorted)
+    files_list, dirs_list = files_and_dirs(data_full, sort_format=basename_sort)
     # print(files_and_dirs(data_full, sort_format=sorted))
     basename_print(files_list, long_verbose_flag=1)
     dirs_print(dirs_list, sort_format=sorted, long_verbose_flag=1, recursion_flag=1)
