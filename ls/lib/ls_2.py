@@ -89,8 +89,11 @@ def long_verbose(pathname):
 def basename_sort(path_list):
     return sorted(path_list, key=os.path.basename)
 
-def sort_revers(path_list):
+def basename_sort_revers(path_list):
     return sorted(path_list, key=os.path.basename, reverse=True)
+
+def sort_reverse(any_array):
+    return sorted(any_array, reverse=True)
 
 
 if __name__ == "__main__":
