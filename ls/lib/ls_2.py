@@ -31,8 +31,8 @@ def files_and_dirs(data_list, sort_format):
 
 def basename_print(paths_list, long_verbose_flag):
     """
-    ПРИНИМАЕТ список путей, флаг расширенного вывода,
-    форматирование вывода в зависимости от long_verbose_flag
+    ПРИНИМАЕТ список путей к файлам или директориям, флаг расширенного вывода,
+    печать форматированного вывода в зависимости от long_verbose_flag
     """
     if long_verbose_flag:
         for path in paths_list:
