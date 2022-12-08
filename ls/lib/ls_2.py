@@ -34,24 +34,29 @@ def basename_print(paths_list, long_verbose_flag):
     ПРИНИМАЕТ список путей к файлам или директориям, флаг расширенного вывода,
     печать форматированного вывода в зависимости от long_verbose_flag
     """
-    if long_verbose_flag:
-        for path in paths_list:
-            print(long_verbose(path))
+    if not paths_list:
+        pass
     else:
-        for path in paths_list:
-            print(os.path.basename(path), end='  ')
-        print()
-
+        if long_verbose_flag:
+            for path in paths_list:
+                print(long_verbose(path))
+        else:
+            for path in paths_list:
+                print(os.path.basename(path), end='  ')
+            print()
 
 
 def dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag):
     """
     ПРИНИМАЕТ список директорий, флаг расширенного вывода, и флаг рекурсивного обхода,
-    для каждой директориий печатает название директории
-
+    для каждой директориий печатает название директории,
+    в случае флага расширенного вывода выводит объем директории,
+    и передает содержимое директрии функциям files_and_dirs и basename_print,
+    в случае флага рекурсивного обхода, рекурсивно углубляется во все найденные директории
     """
     for dir_name in dirs_list:
-        print(f"\n{dir_name}:")
+        if recursion_flag == 1:
+            print(f"{dir_name}:")
         # if long_verbose_flag:
         #     print(f"Итого {volume_calculate(dir_name)}")
         indir_list = os.listdir(dir_name)
@@ -67,10 +72,12 @@ def dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag):
             print(f"Итого {volume}")
 
         files_list, dirs_list = files_and_dirs(indir_path_list, sort_format=sort_format)
-        basename_print(files_list + dirs_list, long_verbose_flag)
+        basename_print(sort_format(files_list + dirs_list), long_verbose_flag)
 
         if recursion_flag:
+            print()
             dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag)
+
 
 # def volume_calculate(dir_path):
 #     """
@@ -82,7 +89,6 @@ def dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag):
 #         indir_path = os.path.join(dir_path, indir_name)
 #         volume += 4*math.ceil(os.stat(indir_path).st_size/4096)
 #     return volume
-
 
 
 def long_verbose(pathname):
@@ -99,8 +105,10 @@ def long_verbose(pathname):
 def basename_sort(path_list):
     return sorted(path_list, key=os.path.basename)
 
+
 def basename_sort_revers(path_list):
     return sorted(path_list, key=os.path.basename, reverse=True)
+
 
 def sort_reverse(any_array):
     return sorted(any_array, reverse=True)

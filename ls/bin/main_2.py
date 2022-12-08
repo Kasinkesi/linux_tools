@@ -32,16 +32,13 @@ def main():
     if args.sort_none:
         sort_format = lambda x: x
     elif args.reverse:
-        sort_format = ls_2.sort_revers
+        sort_format = ls_2.sort_reverse
     else:
         sort_format = sorted
 
-
     files_list, dirs_list = ls_2.files_and_dirs(args.paths, sort_format=sort_format)
-
     ls_2.basename_print(files_list, long_verbose_flag=args.l)
     ls_2.dirs_print(dirs_list, sort_format=sort_format, long_verbose_flag=args.l, recursion_flag=args.R)
-
 
 
 if __name__ == '__main__':
