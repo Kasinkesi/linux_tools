@@ -57,19 +57,13 @@ def dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag):
     for dir_name in dirs_list:
         if recursion_flag == 1:
             print(f"{dir_name}:")
-        # if long_verbose_flag:
-        #     print(f"Итого {volume_calculate(dir_name)}")
         indir_list = os.listdir(dir_name)
 
         # собирает список из относительных путей до содержимого директории
         indir_path_list = [os.path.join(dir_name, indir_name) for indir_name in indir_list]
 
-        # считает кратную 4кБ сумму размеров содержимого полученной диретории
         if long_verbose_flag:
-            volume = 0
-            for indir_path in indir_path_list:
-                volume += 4 * math.ceil(os.stat(indir_path).st_size / 4096)
-            print(f"Итого {volume}")
+            volume_calculate(indir_path_list)
 
         files_list, dirs_list = files_and_dirs(indir_path_list, sort_format=sort_format)
         basename_print(sort_format(files_list + dirs_list), long_verbose_flag)
@@ -79,16 +73,15 @@ def dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag):
             dirs_print(dirs_list, sort_format, long_verbose_flag, recursion_flag)
 
 
-# def volume_calculate(dir_path):
-#     """
-#     ПРИНИМАЕТ путь к директории
-#     ВОЗВРАЩАЕТ кратную 4кБ сумму размеров содержимого полученной диретории
-#     """
-#     volume = 0
-#     for indir_name in os.listdir(dir_path):
-#         indir_path = os.path.join(dir_path, indir_name)
-#         volume += 4*math.ceil(os.stat(indir_path).st_size/4096)
-#     return volume
+def volume_calculate(indir_path_list):
+    """
+    ПРИНИМАЕТ список путей,
+    отправляет на печать кратную 4кБ сумму размеров диреторий
+    """
+    volume = 0
+    for indir_path in indir_path_list:
+        volume += 4 * math.ceil(os.stat(indir_path).st_size / 4096)
+    print(f"Итого {volume}")
 
 
 def long_verbose(pathname):

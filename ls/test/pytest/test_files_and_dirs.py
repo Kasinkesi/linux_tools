@@ -13,98 +13,104 @@ except:
     from lib import ls_2
 
 
-def test_empty_dir_and_no_sort(empty_dir, capsys):
-    files_list, dirs_list = ls_2.files_and_dirs(empty_dir, lambda x: x)
-
-    captured = capsys.readouterr().out
-    expected = 'not_file_or_dir не файл или директория\n'
-    assert captured == expected
-    assert files_list == []
-    assert dirs_list == [empty_dir[0]]
+def basename_list(path_list):
+    return [os.path.basename(path) for path in path_list]
 
 
-def test_nonempty_dir_and_no_sort(dir_list_gen, capsys):
-    files_list, dirs_list = ls_2.files_and_dirs(dir_list_gen, lambda x: x)
+def test_empty_list_no_sort():
+    files_list, dirs_list = ls_2.files_and_dirs([], lambda x: x)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
 
-    captured = capsys.readouterr().out
-    expected = 'not_file_or_dir не файл или директория\n'
-    assert captured == expected
+    assert basename_files_list == []
+    assert basename_dirs_list == []
 
-    assert os.path.basename(files_list[0]) == 'sixteen_KB_file_1'
-    assert os.path.basename(files_list[1]) == 'less_sixteen_KB_file_2'
-    assert os.path.basename(files_list[2]) == 'more_sixteen_KB_file_3'
 
-    assert os.path.basename(dirs_list[0]) == 'empty_dir_1'
-    assert os.path.basename(dirs_list[1]) == 'non_empty_dir_1'
-    assert os.path.basename(dirs_list[2]) == 'empty_dir_2'
-    assert os.path.basename(dirs_list[3]) == 'non_empty_dir_2'
-    assert os.path.basename(dirs_list[4]) == 'empty_dir_3'
-
-def test_nonempty_dir_and_sort(dir_list_gen, capsys):
-    files_list, dirs_list = ls_2.files_and_dirs(dir_list_gen, sorted)
-
+def test_not_file_or_dir(capsys):
+    ls_2.files_and_dirs(['not_file_or_dir'], lambda x: x)
     captured = capsys.readouterr().out
     expected = 'not_file_or_dir не файл или директория\n'
     assert captured == expected
 
-    assert os.path.basename(files_list[0]) == 'less_sixteen_KB_file_2'
-    assert os.path.basename(files_list[1]) == 'more_sixteen_KB_file_3'
-    assert os.path.basename(files_list[2]) == 'sixteen_KB_file_1'
 
-    assert os.path.basename(dirs_list[0]) == 'empty_dir_1'
-    assert os.path.basename(dirs_list[1]) == 'non_empty_dir_1'
-    assert os.path.basename(dirs_list[2]) == 'empty_dir_2'
-    assert os.path.basename(dirs_list[3]) == 'non_empty_dir_2'
-    assert os.path.basename(dirs_list[4]) == 'empty_dir_3'
-
-def test_nonempty_dir_and_revers_sort(dir_list_gen, capsys):
-    files_list, dirs_list = ls_2.files_and_dirs(dir_list_gen, ls_2.sort_revers)
-
+def test_only_files_list_no_sort(only_files_list, capsys):
+    files_list, dirs_list = ls_2.files_and_dirs(only_files_list + ['not_file_or_dir'], lambda x: x)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
     captured = capsys.readouterr().out
     expected = 'not_file_or_dir не файл или директория\n'
     assert captured == expected
-
-    assert os.path.basename(files_list[0]) == 'sixteen_KB_file_1'
-    assert os.path.basename(files_list[1]) == 'more_sixteen_KB_file_3'
-    assert os.path.basename(files_list[2]) == 'less_sixteen_KB_file_2'
-
-    assert os.path.basename(dirs_list[0]) == 'empty_dir_3'
-    assert os.path.basename(dirs_list[1]) == 'non_empty_dir_2'
-    assert os.path.basename(dirs_list[2]) == 'empty_dir_2'
-    assert os.path.basename(dirs_list[3]) == 'non_empty_dir_1'
-    assert os.path.basename(dirs_list[4]) == 'empty_dir_1'
+    assert basename_files_list == ['c_file', 'a_file', '_b_file']
+    assert basename_dirs_list == []
 
 
-def test_nonempty_dir_and_basename_sort(dir_list_gen, capsys):
-    files_list, dirs_list = ls_2.files_and_dirs(dir_list_gen, ls_2.basename_sort)
+def test_only_dirs_list_no_sort(only_dirs_list):
+    files_list, dirs_list = ls_2.files_and_dirs(only_dirs_list, lambda x: x)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
 
-    captured = capsys.readouterr().out
-    expected = 'not_file_or_dir не файл или директория\n'
-    assert captured == expected
+    assert basename_files_list == []
+    assert basename_dirs_list == ['c_dir', 'a_dir', '_b_dir']
 
-    assert os.path.basename(files_list[0]) == 'less_sixteen_KB_file_2'
-    assert os.path.basename(files_list[1]) == 'more_sixteen_KB_file_3'
-    assert os.path.basename(files_list[2]) == 'sixteen_KB_file_1'
 
-    assert os.path.basename(dirs_list[0]) == 'empty_dir_1'
-    assert os.path.basename(dirs_list[1]) == 'empty_dir_2'
-    assert os.path.basename(dirs_list[2]) == 'empty_dir_3'
-    assert os.path.basename(dirs_list[3]) == 'non_empty_dir_1'
-    assert os.path.basename(dirs_list[4]) == 'non_empty_dir_2'
+def test_mixed_list_no_sort(mixed_list):
+    files_list, dirs_list = ls_2.files_and_dirs(mixed_list, lambda x: x)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
 
-def test_nonempty_dir_and_basename_sort_revers(dir_list_gen, capsys):
-    files_list, dirs_list = ls_2.files_and_dirs(dir_list_gen, ls_2.basename_sort_revers)
+    assert basename_files_list == ['c_file', 'a_file', '_b_file']
+    assert basename_dirs_list == ['c_dir', 'a_dir', '_b_dir']
 
-    captured = capsys.readouterr().out
-    expected = 'not_file_or_dir не файл или директория\n'
-    assert captured == expected
 
-    assert os.path.basename(files_list[0]) == 'sixteen_KB_file_1'
-    assert os.path.basename(files_list[1]) == 'more_sixteen_KB_file_3'
-    assert os.path.basename(files_list[2]) == 'less_sixteen_KB_file_2'
+def test_only_files_list_sorted(only_files_list):
+    files_list, dirs_list = ls_2.files_and_dirs(only_files_list, sorted)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
 
-    assert os.path.basename(dirs_list[0]) == 'non_empty_dir_2'
-    assert os.path.basename(dirs_list[1]) == 'non_empty_dir_1'
-    assert os.path.basename(dirs_list[2]) == 'empty_dir_3'
-    assert os.path.basename(dirs_list[3]) == 'empty_dir_2'
-    assert os.path.basename(dirs_list[4]) == 'empty_dir_1'
+    assert basename_files_list == ['_b_file', 'a_file', 'c_file']
+    assert basename_dirs_list == []
+
+
+def test_only_dirs_list_sorted(only_dirs_list):
+    files_list, dirs_list = ls_2.files_and_dirs(only_dirs_list, sorted)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
+
+    assert basename_files_list == []
+    assert basename_dirs_list == ['_b_dir', 'a_dir', 'c_dir']
+
+
+def test_mixed_list_sorted(mixed_list):
+    files_list, dirs_list = ls_2.files_and_dirs(mixed_list, sorted)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
+
+    assert basename_files_list == ['_b_file', 'a_file', 'c_file']
+    assert basename_dirs_list == ['_b_dir', 'a_dir', 'c_dir']
+
+
+def test_only_files_list_sort_reverse(only_files_list):
+    files_list, dirs_list = ls_2.files_and_dirs(only_files_list, ls_2.sort_reverse)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
+
+    assert basename_files_list == ['c_file', 'a_file', '_b_file']
+    assert basename_dirs_list == []
+
+
+def test_only_dirs_list_sort_reverse(only_dirs_list):
+    files_list, dirs_list = ls_2.files_and_dirs(only_dirs_list, ls_2.sort_reverse)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
+
+    assert basename_files_list == []
+    assert basename_dirs_list == ['c_dir', 'a_dir', '_b_dir']
+
+
+def test_mixed_list_sort_reverse(mixed_list):
+    files_list, dirs_list = ls_2.files_and_dirs(mixed_list, ls_2.sort_reverse)
+    basename_files_list = basename_list(files_list)
+    basename_dirs_list = basename_list(dirs_list)
+
+    assert basename_files_list == ['c_file', 'a_file', '_b_file']
+    assert basename_dirs_list == ['c_dir', 'a_dir', '_b_dir']

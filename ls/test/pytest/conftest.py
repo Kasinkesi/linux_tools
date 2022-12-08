@@ -1,46 +1,46 @@
 import pytest
-
-@pytest.fixture()
-def dir_list_gen(tmpdir):
-    sixteen_KB_file_1 = tmpdir.join('sixteen_KB_file_1')
-    sixteen_KB_file_1.write(bin(1 << 14))
-    empty_dir_1 = tmpdir.mkdir('empty_dir_1')
-    non_empty_dir_1 = tmpdir.mkdir('non_empty_dir_1')
-
-    less_sixteen_KB_file_2 = non_empty_dir_1.join('less_sixteen_KB_file_2')
-    less_sixteen_KB_file_2.write(bin((1 << 14) - 1))
-    empty_dir_2 = non_empty_dir_1.mkdir('empty_dir_2')
-    non_empty_dir_2 = non_empty_dir_1.mkdir('non_empty_dir_2')
-
-    more_sixteen_KB_file_3 = non_empty_dir_2.join('more_sixteen_KB_file_3')
-    more_sixteen_KB_file_3.write(bin((1 << 14) - 1))
-    empty_dir_3 = non_empty_dir_2.mkdir('empty_dir_3')
-
-    dir_list = [sixteen_KB_file_1, empty_dir_1, non_empty_dir_1, less_sixteen_KB_file_2,
-                  empty_dir_2, non_empty_dir_2, more_sixteen_KB_file_3, empty_dir_3, "not_file_or_dir"]
-
-    return dir_list
+import os
 
 
 @pytest.fixture()
-def nonempty_dir(tmpdir):
-    sixteen_KB_file_1 = tmpdir.join('sixteen_KB_file_1')
-    sixteen_KB_file_1.write(bin(1 << 14))
-    empty_dir_1 = tmpdir.mkdir('empty_dir_1')
-    non_empty_dir_1 = tmpdir.mkdir('non_empty_dir_1')
-
-    less_sixteen_KB_file_2 = non_empty_dir_1.join('less_sixteen_KB_file_2')
-    less_sixteen_KB_file_2.write(bin((1 << 14) - 1))
-    empty_dir_2 = non_empty_dir_1.mkdir('empty_dir_2')
-    non_empty_dir_2 = non_empty_dir_1.mkdir('non_empty_dir_2')
-
-    more_sixteen_KB_file_3 = non_empty_dir_2.join('more_sixteen_KB_file_3')
-    more_sixteen_KB_file_3.write(bin((1 << 14) - 1))
-    empty_dir_3 = non_empty_dir_2.mkdir('empty_dir_3')
-
-    return [tmpdir, "not_file_or_dir"]
+def only_files_list(tmpdir):
+    a_file = tmpdir.join('a_file')
+    a_file.write('a_file')
+    b_file = tmpdir.join('_b_file')
+    b_file.write('b_file')
+    c_file = tmpdir.join('c_file')
+    c_file.write('c_file')
+    return [c_file, a_file, b_file]
 
 
 @pytest.fixture()
-def empty_dir(tmpdir):
-    return [tmpdir, "not_file_or_dir"]
+def only_dirs_list(tmpdir):
+    a_dir = tmpdir.mkdir('a_dir')
+    b_dir = tmpdir.mkdir('_b_dir')
+    c_dir = tmpdir.mkdir('c_dir')
+    return [c_dir, a_dir, b_dir]
+
+
+@pytest.fixture()
+def mixed_list(tmpdir):
+    a_file = tmpdir.join('a_file')
+    a_file.write('a_file')
+    b_file = tmpdir.join('_b_file')
+    b_file.write('b_file')
+    c_file = tmpdir.join('c_file')
+    c_file.write('c_file')
+
+    a_dir = tmpdir.mkdir('a_dir')
+    b_dir = tmpdir.mkdir('_b_dir')
+    c_dir = tmpdir.mkdir('c_dir')
+    return [c_file, c_dir, a_dir, a_file, b_file, b_dir]
+
+
+@pytest.fixture()
+def empty_dir_list(tmpdir):
+    return [tmpdir]
+
+
+@pytest.fixture()
+def path_to_data():
+    return os.path.join(os.path.dirname(__file__), "..", "data")
