@@ -32,9 +32,9 @@ def main():
     if args.sort_none:
         sort_format = None
     elif args.reverse:
-        sort_format = ls_2.basename_sort_revers
+        sort_format = ls_2.sort_revers
     else:
-        sort_format = ls_2.basename_sort
+        sort_format = sorted
 
 
     files_list, dirs_list = ls_2.files_and_dirs(args.paths, sort_format=sort_format)
