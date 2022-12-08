@@ -30,7 +30,7 @@ def main():
     args = parse_args()
 
     if args.sort_none:
-        sort_format = None
+        sort_format = lambda x: x
     elif args.reverse:
         sort_format = ls_2.sort_revers
     else:
