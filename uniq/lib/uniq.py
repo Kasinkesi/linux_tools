@@ -42,19 +42,20 @@ def uniq_line_counter(inp, out):
     count = 1
     for line in inp:
         if line != prev_line:
-            out.write(f'{count} {prev_line}')
+            out.write(f'{count:>6} {prev_line}')
             prev_line = line
             count = 1
         else:
             count += 1
-    out.write(f'{count} {prev_line}')
+    out.write(f'{count:>6} {prev_line}')
 
 
 "-d"
 
 
 def repeated_line_printer(inp, out):
-    prev_line = None
+    first_line = inp.readline()
+    prev_line = first_line
     repeat_flag = False
     for line in inp:
         if line == prev_line:
@@ -73,7 +74,8 @@ def repeated_line_printer(inp, out):
 
 
 def repeated__all_line_printer(inp, out):
-    prev_line = None
+    first_line = inp.readline()
+    prev_line = first_line
     repeat_flag = False
     for line in inp:
         if line == prev_line:
