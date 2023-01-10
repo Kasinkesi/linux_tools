@@ -1,5 +1,10 @@
 import sys
 
+
+def count_printer(out, count, prev):
+    out.write(f'{count:>6} {prev}')
+
+
 "no flags"
 
 
@@ -11,6 +16,23 @@ def uniq_line_printer(inp, out):
             out.write(prev_line)
             prev_line = line
     out.write(prev_line)
+
+
+"-c"
+
+
+def uniq_line_counter(inp, out):
+    first_line = inp.readline()
+    prev_line = first_line
+    count = 1
+    for line in inp:
+        if line != prev_line:
+            count_printer(out, count, prev_line)
+            prev_line = line
+            count = 1
+        else:
+            count += 1
+    count_printer(out, count, prev_line)
 
 
 "-u"
@@ -33,21 +55,24 @@ def only_uniq_line_printer(inp, out):
         out.write(prev_line)
 
 
-"-c"
+"-cu"
 
 
-def uniq_line_counter(inp, out):
+def only_uniq_line_counter(inp, out):
     first_line = inp.readline()
     prev_line = first_line
     count = 1
     for line in inp:
-        if line != prev_line:
-            out.write(f'{count:>6} {prev_line}')
-            prev_line = line
-            count = 1
-        else:
+        if line == prev_line:
             count += 1
-    out.write(f'{count:>6} {prev_line}')
+        elif line != prev_line and count == 1:
+            count_printer(out, count, prev_line)
+            prev_line = line
+        else:
+            count = 1
+            prev_line = line
+    if count == 1:
+        count_printer(out, count, prev_line)
 
 
 "-d"
@@ -68,6 +93,26 @@ def repeated_line_printer(inp, out):
             prev_line = line
     if repeat_flag:
         out.write(prev_line)
+
+
+"-cd"
+
+
+def repeated_line_counter(inp, out):
+    first_line = inp.readline()
+    prev_line = first_line
+    count = 1
+    for line in inp:
+        if line == prev_line:
+            count += 1
+        elif line != prev_line and count >= 2:
+            count_printer(out, count, prev_line)
+            prev_line = line
+            count = 1
+        else:
+            prev_line = line
+    if count >= 2:
+        count_printer(out, count, prev_line)
 
 
 "-D"
@@ -99,7 +144,7 @@ if __name__ == '__main__':
         only_uniq_line_printer(inp, sys.stdout)
     print("\ncounter")
     with open("../test/data/test_one", "r") as inp, open("../test/data/test_three", "w") as out:
-        uniq_line_counter(inp, sys.stdout)
+        repeated_line_counter(inp, sys.stdout)
     print("\nrepeated")
     with open("../test/data/test_one", "r") as inp:
         repeated_line_printer(inp, sys.stdout)
