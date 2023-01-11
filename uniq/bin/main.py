@@ -12,7 +12,7 @@ except ImportError:
 def parse_args():
     parser = argparse.ArgumentParser(description="Удаляет все кроме одной повторяющиеся строки из ВВОДА (или "
                                                  "стандартного ввода) и печатает на ВЫВОД (или стандартный вывод).")
-    parser.add_argument("inp", default=sys.stdin, help="input source")
+    parser.add_argument("inp", nargs='?', default=sys.stdin, help="input source")
     parser.add_argument("out", nargs='?', default=sys.stdout, help="destination")
     parser.add_argument("-c", "--count", dest="count", action="store_true",
                         help="выводить число повторов в начале каждой строки")
