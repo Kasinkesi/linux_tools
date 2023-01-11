@@ -58,10 +58,9 @@ def uniq(inp, out, flag, count_flag, skip_num, check_num):
         line_printer(out, count, prev)
     elif flag == "only uniq" and count == 1:
         line_printer(out, count, prev)
-    elif flag == "repeated" and count >= 2:
+    elif (flag == "repeated" or flag == "all repeated") and count >= 2:
         line_printer(out, count, prev)
-    elif flag == "all repeated" and count >= 2:
-        line_printer(out, count, prev)
+
 
 
 if __name__ == '__main__':
